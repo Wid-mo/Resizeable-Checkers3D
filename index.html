@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkers3D</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <!-- <h1 class="logo">Checkers3D</h1> -->
+    <div class="sliders">
+      <label id="output_w" for="noOfColumns">columns: 8</label>
+      <input
+        type="range"
+        id="noOfColumns"
+        min="1"
+        max="20"
+        step="1"
+        value="8"
+        oninput="document.getElementById('output_w').textContent = `columns: ${this.value}`"
+      />
+      <label id="output_h" for="noOfRows">rows: 8</label>
+      <input
+        type="range"
+        id="noOfRows"
+        min="1"
+        max="20"
+        step="1"
+        value="8"
+        oninput="document.getElementById('output_h').textContent = `rows: ${this.value}`"
+      />
+    </div>
+
+    <div class="chessboard">
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+    </div>
+    <div class="shadow"></div>
+  </body>
+</html>
