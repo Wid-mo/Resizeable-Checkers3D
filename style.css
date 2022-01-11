@@ -27,8 +27,10 @@ body {
 
 
 .chessboard {
-  --width: calc(500px + (var(--columns) - var(--rows)) * 500px/8);
-  --height: 500px;
+  /* --width: calc(500px + (var(--columns) - var(--rows)) * 500px/8);
+  --height: 500px; */
+  --width: calc((var(--max-width)-0px)*var(--columns)/20);
+  --height: calc((var(--max-height)-0px)*var(--rows)/20);
 
   width: var(--width);
   height: var(--height);
