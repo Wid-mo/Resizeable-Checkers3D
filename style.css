@@ -27,23 +27,16 @@ body {
 
 
 .chessboard {
-  /* --width: calc(500px + (var(--columns) - var(--rows)) * 500px/8);
-  --height: 500px; */
-  --width: calc((var(--max-width)-0px)*var(--columns)/20);
-  --height: calc((var(--max-height)-0px)*var(--rows)/20);
-
-  width: var(--width);
-  height: var(--height);
   background: burlywood;
   transform-style: preserve-3d;
   top: 50%;
-  transform: translateY(-50%);
-  /* transform: perspective(500px) rotateX(30deg); */
+  transform: translateY(-50%) perspective(500px) rotateX(30deg) translateY(-100px);
 
   padding: 10px;
   display: grid;
-  grid-template-columns: repeat(var(--columns), 1fr);
-  grid-template-rows: repeat(var(--rows), 1fr);
+  --cell-size: calc(80vmin / max( var(--rows), var(--columns) ));
+  grid-template-columns: repeat(var(--columns), var(--cell-size));
+  grid-template-rows: repeat(var(--rows), var(--cell-size));
   position: absolute;
 }
 
