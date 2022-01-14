@@ -72,6 +72,16 @@ body {
 
 }
 
+.chessboard .cylinder.black {
+  
+  background-color: black;
+}
+
+.chessboard .cylinder.white {
+  
+  background-color: greenyellow;
+}
+
 .chessboard .field:hover > .cylinder {
   cursor: pointer;
 }

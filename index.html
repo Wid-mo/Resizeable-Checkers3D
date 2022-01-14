@@ -9,7 +9,6 @@
     <script src="script.js" defer></script>
   </head>
   <body>
-    <!-- <h1 class="logo">Checkers3D</h1> -->
     <div class="sliders">
       <label id="output_w" for="noOfColumns">columns: 8</label>
       <input
@@ -31,11 +30,43 @@
         value="8"
         oninput="document.getElementById('output_h').textContent = `rows: ${this.value}`"
       />
+      <label id="output_p" for="noOfPawns">pawns: 12</label>
+      <input
+        type="range"
+        id="noOfPawns"
+        min="1"
+        max="16"
+        step="1"
+        value="12"
+        oninput="document.getElementById('output_p').textContent = `pawns: ${this.value}`"
+      />
     </div>
 
     <div class="chessboard">
       <div class="field"></div>
-      <div class="field"><div class="cylinder"></div></div>
+      <div class="field"><div class="cylinder black"></div></div>
+      <div class="field"></div>
+      <div class="field"><div class="cylinder black"></div></div>
+      <div class="field"></div>
+      <div class="field"><div class="cylinder black"></div></div>
+      <div class="field"></div>
+      <div class="field"><div class="cylinder black"></div></div>
+      <div class="field"><div class="cylinder black"></div></div>
+      <div class="field"></div>
+      <div class="field"><div class="cylinder black"></div></div>
+      <div class="field"></div>
+      <div class="field"><div class="cylinder black"></div></div>
+      <div class="field"></div>
+      <div class="field"><div class="cylinder black"></div></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"><div class="cylinder black"></div></div>
+      <div class="field"></div>
+      <div class="field"><div class="cylinder black"></div></div>
+      <div class="field"></div>
+      <div class="field"><div class="cylinder black"></div></div>
+      <div class="field"></div>
+      <div class="field"><div class="cylinder black"></div></div>
       <div class="field"></div>
       <div class="field"></div>
       <div class="field"></div>
@@ -52,51 +83,29 @@
       <div class="field"></div>
       <div class="field"></div>
       <div class="field"></div>
+      <div class="field"><div class="cylinder white"></div></div>
+      <div class="field"></div>
+      <div class="field"><div class="cylinder white"></div></div>
+      <div class="field"></div>
+      <div class="field"><div class="cylinder white"></div></div>
+      <div class="field"></div>
+      <div class="field"><div class="cylinder white"></div></div>
       <div class="field"></div>
       <div class="field"></div>
+      <div class="field"><div class="cylinder white"></div></div>
       <div class="field"></div>
+      <div class="field"><div class="cylinder white"></div></div>
       <div class="field"></div>
+      <div class="field"><div class="cylinder white"></div></div>
       <div class="field"></div>
+      <div class="field"><div class="cylinder white"></div></div>
+      <div class="field"><div class="cylinder white"></div></div>
       <div class="field"></div>
+      <div class="field"><div class="cylinder white"></div></div>
       <div class="field"></div>
+      <div class="field"><div class="cylinder white"></div></div>
       <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
-      <div class="field"></div>
+      <div class="field"><div class="cylinder white"></div></div>
       <div class="field"></div>
     </div>
   </body>
