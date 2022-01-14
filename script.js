@@ -27,7 +27,7 @@ function colorTheField(fieldEl, row, column) {
 // ------------------------
 rowsNumber.addEventListener("input", changeBoardSize);
 colsNumber.addEventListener("input", changeBoardSize);
-pawnsNumber.addEventListener("input", changePawnsNumberOnChessboard);
+pawnsNumber.addEventListener("input", changePawnsNumber);
 
 function changeBoardSize(e) {
   let chessboardRows = getComputedStyle(document.body).getPropertyValue(
@@ -49,6 +49,7 @@ function changeBoardSize(e) {
   createFields(chessboardRows, chessboardColumns);
 
   setMaxPawnsNumber(chessboardRows, chessboardColumns);
+  changePawnsNumberOnChessboard(pawnsNumber.value)
 }
 
 function createFields(chessboardRows = 8, chessboardColumns = 8) {
@@ -71,22 +72,20 @@ function setMaxPawnsNumber(chessboardRows, chessboardColumns) {
   } else {
     pawnsNumber.max = Math.ceil((chessboardRows * chessboardColumns) / 4);
   }
-
-  // if (pawnsNumber.value > pawnsNumber.max) {
-  //   document.getElementById(
-  //     "output_p"
-  //   ).textContent = `pawns: ${pawnsNumber.max}`;
-  // }
 }
 
-function changePawnsNumberOnChessboard(e) {
+function changePawnsNumber(e) {
+  const pawnsNumber = e.target.valueAsNumber;
+  changePawnsNumberOnChessboard(pawnsNumber)
+}
+
+function changePawnsNumberOnChessboard(pawnsNumber) {
   const chessboardRows = getComputedStyle(document.body).getPropertyValue(
     "--rows"
   );
   const chessboardColumns = getComputedStyle(document.body).getPropertyValue(
     "--columns"
   );
-  const pawnsNumber = e.target.valueAsNumber;
   const fields = document.querySelectorAll(".chessboard .field");
 
   let blackPawns = 0;
