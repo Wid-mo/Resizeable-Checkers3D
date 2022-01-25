@@ -41,32 +41,53 @@ function attachListeners() {
 
 function handleClick() {
   const playerPawn = this.children[0];
-  const isCurrentPlayerPawn = playerPawn?.classList.contains(turn);
-  const isPossibleMoveField = this.classList.contains("canMove");
+  const isCurrentPlayerPawnClicked = playerPawn?.classList.contains(turn);
+  const isPossibleMoveFieldClicked = this.classList.contains("canMove");
   // if (clicked on own pawn) OR (clicked on canMove field) then execute rest of the function
-  if (!isCurrentPlayerPawn && !isPossibleMoveField) return;
+  if (!isCurrentPlayerPawnClicked && !isPossibleMoveFieldClicked) return;
 
-  // deselect
-  if (this.classList.contains("fieldSelected")) {
-    // delete all canMove field
-    const canMoveElements = document.querySelectorAll(".canMove");
-    canMoveElements.forEach((el) => el.remove());
-
-    this.classList.remove("fieldSelected");
-    return;
+  if (isCurrentPlayerPawnClicked) {
+    handleCurrentPlayerPawnClick(this);
+  } else if (isPossibleMoveFieldClicked) {
+    handleHolderPawnClicked(this);
   }
-  if (isCurrentPlayerPawn) {
-    const currentPlayerPawns = document.querySelectorAll(
-      `.chessboard .${turn}`
-    );
-    currentPlayerPawns.forEach((pawnEl) =>
-      pawnEl.classList.remove("fieldSelected")
-    );
+}
 
-    this.classList.add("fieldSelected");
-    return;
+function handleCurrentPlayerPawnClick(srcEl) {
+  const isSelectPawnClicked = srcEl.classList.contains("fieldSelected");
+  if (isSelectPawnClicked) {
+    removeAllHolderPawns();
+    removeSelection(srcEl);
+  } else {
+    removeAllPawnSelected();
+    addSelection(srcEl);
+    addAllPossibleMoves(srcEl);
   }
+}
 
+function removeAllHolderPawns() {
+  const canMoveElements = document.querySelectorAll(".canMove");
+  canMoveElements.forEach((el) => el.remove());
+}
+
+function removeSelection(srcEl) {
+  srcEl.classList.remove("fieldSelected");
+}
+
+function removeAllPawnSelected() {
+  const currentPlayerPawns = document.querySelectorAll(".fieldSelected");
+  currentPlayerPawns.forEach((pawnEl) =>
+    pawnEl.classList.remove("fieldSelected")
+  );
+}
+function addSelection(srcEl) {
+  srcEl.classList.add("fieldSelected");
+}
+
+// TODO:
+function addAllPossibleMoves(scrEl) {}
+// TODO:
+function handleHolderPawnClicked(srcEl) {
   const fields = document.querySelectorAll(".chessboard .field");
 }
 
