@@ -43,11 +43,18 @@ function handleClick() {
   const playerPawn = this.children[0];
   const isCurrentPlayerPawn = playerPawn?.classList.contains(turn);
   const isPossibleMoveField = this.classList.contains("canMove");
-  console.log(playerPawn?.classList.contains(turn));
-  if (!isCurrentPlayerPawn || isPossibleMoveField) return;
+  // if (clicked on own pawn) OR (clicked on canMove field) then execute rest of the function
+  if (!isCurrentPlayerPawn && !isPossibleMoveField) return;
 
-  console.log("click");
+  // deselect
+  if (this.classList.contains("fieldSelected")) {
+    // delete all canMove field
+    const canMoveElements = document.querySelectorAll(".canMove");
+    canMoveElements.forEach((el) => el.remove());
 
+    this.classList.remove("fieldSelected");
+    return;
+  }
   if (isCurrentPlayerPawn) {
     const currentPlayerPawns = document.querySelectorAll(
       `.chessboard .${turn}`
