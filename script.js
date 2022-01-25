@@ -3,10 +3,18 @@ const rowsNumber = document.getElementById("noOfRows");
 const colsNumber = document.getElementById("noOfColumns");
 const pawnsNumber = document.getElementById("noOfPawns");
 
+const PLAYERS = {
+  WHITE: "white",
+  BLACK: "black",
+};
+
+let turn = PLAYERS.WHITE;
+
 setup();
 
 function setup() {
   colorTheFields(8, 8);
+  attachListeners();
 }
 
 function colorTheFields(chessboardRows = 8, chessboardColumns = 8) {
@@ -24,12 +32,43 @@ function colorTheField(fieldEl, row, column) {
   fieldEl.classList.add(fieldColor);
 }
 
+function attachListeners() {
+  const fields = document.querySelectorAll(".chessboard .field");
+  fields.forEach((el) => {
+    el.addEventListener("click", handleClick);
+  });
+}
+
+function handleClick() {
+  const playerPawn = this.children[0];
+  const isCurrentPlayerPawn = playerPawn?.classList.contains(turn);
+  const isPossibleMoveField = this.classList.contains("canMove");
+  console.log(playerPawn?.classList.contains(turn));
+  if (!isCurrentPlayerPawn || isPossibleMoveField) return;
+
+  console.log("click");
+
+  if (isCurrentPlayerPawn) {
+    const currentPlayerPawns = document.querySelectorAll(
+      `.chessboard .${turn}`
+    );
+    currentPlayerPawns.forEach((pawnEl) =>
+      pawnEl.classList.remove("fieldSelected")
+    );
+
+    this.classList.add("fieldSelected");
+    return;
+  }
+
+  const fields = document.querySelectorAll(".chessboard .field");
+}
+
 // ------------------------
 rowsNumber.addEventListener("input", changeBoardSize);
 colsNumber.addEventListener("input", changeBoardSize);
 pawnsNumber.addEventListener("input", changePawnsNumber);
 
-function changeBoardSize(e) {
+function changeBoardSize() {
   let chessboardRows = getComputedStyle(document.body).getPropertyValue(
     "--rows"
   );
@@ -38,10 +77,10 @@ function changeBoardSize(e) {
   );
 
   if (this === rowsNumber) {
-    chessboardRows = e.target.valueAsNumber;
+    chessboardRows = this.valueAsNumber;
     document.body.style.setProperty("--rows", chessboardRows);
   } else if (this === colsNumber) {
-    chessboardColumns = e.target.valueAsNumber;
+    chessboardColumns = this.valueAsNumber;
     document.body.style.setProperty("--columns", chessboardColumns);
   }
 
@@ -49,7 +88,7 @@ function changeBoardSize(e) {
   createFields(chessboardRows, chessboardColumns);
 
   setMaxPawnsNumber(chessboardRows, chessboardColumns);
-  changePawnsNumberOnChessboard(pawnsNumber.value)
+  changePawnsNumberOnChessboard(pawnsNumber.value);
 }
 
 function createFields(chessboardRows = 8, chessboardColumns = 8) {
@@ -74,9 +113,9 @@ function setMaxPawnsNumber(chessboardRows, chessboardColumns) {
   }
 }
 
-function changePawnsNumber(e) {
-  const pawnsNumber = e.target.valueAsNumber;
-  changePawnsNumberOnChessboard(pawnsNumber)
+function changePawnsNumber() {
+  const pawnsNumber = this.valueAsNumber;
+  changePawnsNumberOnChessboard(pawnsNumber);
 }
 
 function changePawnsNumberOnChessboard(pawnsNumber) {
