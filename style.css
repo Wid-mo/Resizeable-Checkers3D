@@ -62,7 +62,7 @@ body {
 }
 
 .chessboard .field.fieldSelected {
-  background-color: green;
+  background-color: rgba(0, 128, 0, 0.527);
 }
 
 .chessboard .field:hover {
@@ -75,11 +75,11 @@ body {
 }
 
 .chessboard .cylinder.black {
-  background: radial-gradient(black 0 50%, orange 50%);
+  background: radial-gradient(black 0 50%, transparent 50%);
 }
 
 .chessboard .cylinder.white {
-  background: radial-gradient(greenyellow 0 50%, orange 50%);
+  background: radial-gradient(greenyellow 0 50%, transparent 50%);
 }
 
 .chessboard .field:hover > .cylinder {
@@ -88,7 +88,7 @@ body {
 
 .chessboard .field > .cylinder.black.canMove {
   background: radial-gradient(initial 0 50%, orange 50%);
-  opacity: 0.5;
+  opacity: 0.15;
 }
 
 .chessboard .field > .cylinder.white.canMove {
