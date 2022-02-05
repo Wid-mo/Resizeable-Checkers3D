@@ -68,18 +68,51 @@ body {
 .chessboard .field:hover {
   opacity: 0.5;
 }
+.chessboard .field {
+  position: relative;
+}
 
 .chessboard .cylinder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  height: 50%;
+  background-color: #333;
+  border-radius: 50% / 10px;
+  transform: translate(-50%, -50%);
+}
+
+.chessboard .cylinder::before {
+  content: "";
+  position: absolute;
+  top: 0%;
+  left: 0%;
   width: 100%;
-  height: 100%;
+  height: 20px;
+  background-color: gray;
+  border-radius: 50% / 10px;
+}
+/* pawns */
+.chessboard .cylinder.white {
+  background-color: green;
+}
+.chessboard .cylinder.white::before {
+  background-color: darkgreen;
 }
 
 .chessboard .cylinder.black {
-  background: radial-gradient(black 0 50%, transparent 50%);
+  background-color: orangered;
 }
-
-.chessboard .cylinder.white {
-  background: radial-gradient(greenyellow 0 50%, transparent 50%);
+.chessboard .cylinder.black::before {
+  background-color: red;
+}
+/* queen */
+.chessboard .cylinder.white.queen::before {
+  background: radial-gradient(transparent 45%, gold 45% 55%, transparent);
+}
+.chessboard .cylinder.black.queen::before {
+  background: radial-gradient(transparent 45%, gold 45% 55%, transparent);
 }
 
 .chessboard .field:hover > .cylinder {
@@ -88,7 +121,7 @@ body {
 
 .chessboard .field > .cylinder.black.canMove {
   background: radial-gradient(initial 0 50%, orange 50%);
-  opacity: 0.15;
+  opacity: 0.5;
 }
 
 .chessboard .field > .cylinder.white.canMove {
