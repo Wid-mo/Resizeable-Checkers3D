@@ -90,36 +90,39 @@ function addSelection(fieldClicked) {
   fieldClicked.classList.add("fieldSelected");
 }
 
-// TODO 1:
 function addAllPossibleMoves(fieldClicked) {
   const clickedPawn = fieldClicked.children[0];
   let player;
   let avaidableMoves = [];
   if (clickedPawn.classList.contains(PLAYERS.WHITE)) {
     player = PLAYERS.WHITE;
-    if (clickedPawn.classList.contains("queen")) {
-      avaidableMoves.push(...getNormalMoves(/** TODO */));
-      avaidableMoves.push(...getTheBeatingMoves(/** TODO */));
+    const isQueen = clickedPawn.classList.contains("queen");
+    if (isQueen) {
+      avaidableMoves.push(...getNormalMoves(clickedPawn, player, isQueen));
+      avaidableMoves.push(...getTheBeatingMoves(clickedPawn, player, isQueen));
     } else {
-      avaidableMoves.push(...getNormalMoves(/** TODO */));
-      avaidableMoves.push(...getTheBeatingMoves(/** TODO */));
+      avaidableMoves.push(...getNormalMoves(clickedPawn, player, isQueen));
+      avaidableMoves.push(...getTheBeatingMoves(clickedPawn, player, isQueen));
     }
   } else if (clickedPawn.classList.contains(PLAYERS.BLACK)) {
     player = PLAYERS.BLACK;
-    if (clickedPawn.classList.contains("queen")) {
-      avaidableMoves.push(...getNormalMoves(/** TODO */));
-      avaidableMoves.push(...getTheBeatingMoves(/** TODO */));
+    const isQueen = clickedPawn.classList.contains("queen");
+    if (isQueen) {
+      avaidableMoves.push(...getNormalMoves(clickedPawn, player, isQueen));
+      avaidableMoves.push(...getTheBeatingMoves(clickedPawn, player, isQueen));
     } else {
-      avaidableMoves.push(...getNormalMoves(/** TODO */));
-      avaidableMoves.push(...getTheBeatingMoves(/** TODO */));
+      avaidableMoves.push(...getNormalMoves(clickedPawn, player, isQueen));
+      avaidableMoves.push(...getTheBeatingMoves(clickedPawn, player, isQueen));
     }
   }
   attachMoves(avaidableMoves, player);
 }
-function getNormalMoves(params) {
+// TODO 1a
+function getNormalMoves(clickedPawn, player, isQueen) {
   return [];
 }
-function getTheBeatingMoves(params) {
+// TODO 1b
+function getTheBeatingMoves(clickedPawn, player, isQueen) {
   return [];
 }
 function attachMoves(avaidableMoves, player) {
