@@ -10,9 +10,6 @@
 :root {
   --rows: 8;
   --columns: 8;
-
-  --max-width: 1000px;
-  --max-height: 500px;
 }
 
 body {
@@ -26,6 +23,7 @@ body {
 }
 
 .chessboard {
+  --cell-size: calc(80vmin / max(var(--rows), var(--columns)));
   background: burlywood;
   transform-style: preserve-3d;
   top: 50%;
@@ -34,7 +32,6 @@ body {
 
   padding: 10px;
   display: grid;
-  --cell-size: calc(80vmin / max(var(--rows), var(--columns)));
   grid-template-columns: repeat(var(--columns), var(--cell-size));
   grid-template-rows: repeat(var(--rows), var(--cell-size));
   position: absolute;
@@ -62,7 +59,7 @@ body {
 }
 
 .chessboard .field.fieldSelected {
-  background-color: rgba(0, 128, 0, 0.527);
+  background-color: rgba(17, 71, 221, 0.527);
 }
 
 .chessboard .field:hover {
@@ -100,7 +97,6 @@ body {
 .chessboard .cylinder.white::before {
   background-color: darkgreen;
 }
-
 .chessboard .cylinder.black {
   background-color: orangered;
 }
@@ -114,17 +110,13 @@ body {
 .chessboard .cylinder.black.queen::before {
   background: radial-gradient(transparent 45%, gold 45% 55%, transparent);
 }
-
-.chessboard .field:hover > .cylinder {
+/* cursor */
+.chessboard .field:not(:empty) {
   cursor: pointer;
 }
 
-.chessboard .field > .cylinder.black.canMove {
-  background: radial-gradient(initial 0 50%, orange 50%);
-  opacity: 0.5;
-}
-
-.chessboard .field > .cylinder.white.canMove {
+/* possible moves */
+.chessboard .field > .cylinder.canMove {
   background: radial-gradient(initial 0 50%, orange 50%);
   opacity: 0.5;
 }

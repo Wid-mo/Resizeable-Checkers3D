@@ -1,3 +1,8 @@
+// special case game rules
+// 1) if promote pawn to queen and have capturing a another pawn, I don't have additional move
+// 2) I win when opponent don't have any move
+// 3) When I have double beating, I show only one beat and after beat - automatically select my pawn and appear additional button to "end turn"
+
 const chessboardEl = document.getElementsByClassName("chessboard")[0];
 const rowsNumber = document.getElementById("noOfRows");
 const colsNumber = document.getElementById("noOfColumns");
@@ -40,8 +45,9 @@ function attachListeners() {
 }
 
 function handleClick() {
-  const playerPawn = this.children[0];
-  const isCurrentPlayerPawnClicked = playerPawn?.classList.contains(turn);
+  const clickedPawn = this.children[0];
+  const selectedPawn = document.querySelector(".field .fieldSelected");
+  const isCurrentPlayerPawnClicked = clickedPawn?.classList.contains(turn);
   const isPossibleMoveFieldClicked = this.classList.contains("canMove");
   // if (clicked on own pawn) OR (clicked on canMove field) then execute rest of the function
   if (!isCurrentPlayerPawnClicked && !isPossibleMoveFieldClicked) return;
@@ -49,19 +55,19 @@ function handleClick() {
   if (isCurrentPlayerPawnClicked) {
     handleCurrentPlayerPawnClick(this);
   } else if (isPossibleMoveFieldClicked) {
-    handleHolderPawnClicked(this);
+    handleHolderPawnClicked(clickedPawn, selectedPawn);
   }
 }
 
-function handleCurrentPlayerPawnClick(srcEl) {
-  const isSelectPawnClicked = srcEl.classList.contains("fieldSelected");
+function handleCurrentPlayerPawnClick(fieldClicked) {
+  const isSelectPawnClicked = fieldClicked.classList.contains("fieldSelected");
   if (isSelectPawnClicked) {
     removeAllHolderPawns();
-    removeSelection(srcEl);
+    removeSelection(fieldClicked);
   } else {
     removeAllPawnSelected();
-    addSelection(srcEl);
-    addAllPossibleMoves(srcEl);
+    addSelection(fieldClicked);
+    addAllPossibleMoves(fieldClicked);
   }
 }
 
@@ -70,8 +76,8 @@ function removeAllHolderPawns() {
   canMoveElements.forEach((el) => el.remove());
 }
 
-function removeSelection(srcEl) {
-  srcEl.classList.remove("fieldSelected");
+function removeSelection(fieldClicked) {
+  fieldClicked.classList.remove("fieldSelected");
 }
 
 function removeAllPawnSelected() {
@@ -80,15 +86,61 @@ function removeAllPawnSelected() {
     pawnEl.classList.remove("fieldSelected")
   );
 }
-function addSelection(srcEl) {
-  srcEl.classList.add("fieldSelected");
+function addSelection(fieldClicked) {
+  fieldClicked.classList.add("fieldSelected");
 }
 
-// TODO:
-function addAllPossibleMoves(scrEl) {}
-// TODO:
-function handleHolderPawnClicked(srcEl) {
+// TODO 1:
+function addAllPossibleMoves(fieldClicked) {
+  const clickedPawn = fieldClicked.children[0];
+  let player;
+  let avaidableMoves = [];
+  if (clickedPawn.classList.contains(PLAYERS.WHITE)) {
+    player = PLAYERS.WHITE;
+    if (clickedPawn.classList.contains("queen")) {
+      avaidableMoves.push(...getNormalMoves(/** TODO */));
+      avaidableMoves.push(...getTheBeatingMoves(/** TODO */));
+    } else {
+      avaidableMoves.push(...getNormalMoves(/** TODO */));
+      avaidableMoves.push(...getTheBeatingMoves(/** TODO */));
+    }
+  } else if (clickedPawn.classList.contains(PLAYERS.BLACK)) {
+    player = PLAYERS.BLACK;
+    if (clickedPawn.classList.contains("queen")) {
+      avaidableMoves.push(...getNormalMoves(/** TODO */));
+      avaidableMoves.push(...getTheBeatingMoves(/** TODO */));
+    } else {
+      avaidableMoves.push(...getNormalMoves(/** TODO */));
+      avaidableMoves.push(...getTheBeatingMoves(/** TODO */));
+    }
+  }
+  attachMoves(avaidableMoves, player);
+}
+function getNormalMoves(params) {
+  return [];
+}
+function getTheBeatingMoves(params) {
+  return [];
+}
+function attachMoves(avaidableMoves, player) {
+  avaidableMoves.forEach((move) => attachMove(move, player));
+}
+
+function attachMove({ isQueen, fieldIndex }, player) {
+  const pawn = createPawn(player);
+  isQueen && pawn.classList.add("queen");
+  pawn.classList.add("canMove");
+
   const fields = document.querySelectorAll(".chessboard .field");
+  fields[fieldIndex]?.append(pawn);
+}
+
+// TODO 2:
+function handleHolderPawnClicked(clickedCanMovePawn, selectedPawn) {
+  // check if it is a beat (if between clicked field and selected pawn contain enemy pawn then it is beat)
+  // remove selected pawn
+  // remove class .canmove for clicked pawn
+  // check if promote pawn
 }
 
 // ------------------------
