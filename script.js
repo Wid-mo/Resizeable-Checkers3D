@@ -48,11 +48,11 @@ function handleClick() {
   const clickedPawn = this.children[0];
   const selectedPawn = document.querySelector(".field .fieldSelected");
   const isCurrentPlayerPawnClicked = clickedPawn?.classList.contains(turn);
-  const isPossibleMoveFieldClicked = this.classList.contains("canMove");
-  // if (clicked on own pawn) OR (clicked on canMove field) then execute rest of the function
+  const isPossibleMoveFieldClicked = clickedPawn?.classList.contains("canMove");
+  // if (clicked on current player pawn) OR (clicked on canMove field) then execute rest of the function
   if (!isCurrentPlayerPawnClicked && !isPossibleMoveFieldClicked) return;
 
-  if (isCurrentPlayerPawnClicked) {
+  if (isCurrentPlayerPawnClicked && !isPossibleMoveFieldClicked) {
     handleCurrentPlayerPawnClick(this);
   } else if (isPossibleMoveFieldClicked) {
     handleHolderPawnClicked(clickedPawn, selectedPawn);
@@ -91,6 +91,9 @@ function addSelection(fieldClicked) {
 }
 
 function addAllPossibleMoves(fieldClicked) {
+  const fields = document.querySelectorAll(".chessboard .field");
+  const fieldIndex = [...fields].findIndex((field) => field === fieldClicked);
+
   const clickedPawn = fieldClicked.children[0];
   let player;
   let avaidableMoves = [];
@@ -98,31 +101,83 @@ function addAllPossibleMoves(fieldClicked) {
     player = PLAYERS.WHITE;
     const isQueen = clickedPawn.classList.contains("queen");
     if (isQueen) {
-      avaidableMoves.push(...getNormalMoves(clickedPawn, player, isQueen));
-      avaidableMoves.push(...getTheBeatingMoves(clickedPawn, player, isQueen));
+      avaidableMoves.push(...getNormalMoves(fieldIndex, player, isQueen));
+      avaidableMoves.push(...getTheBeatingMoves(fieldIndex, player, isQueen));
     } else {
-      avaidableMoves.push(...getNormalMoves(clickedPawn, player, isQueen));
-      avaidableMoves.push(...getTheBeatingMoves(clickedPawn, player, isQueen));
+      avaidableMoves.push(...getNormalMoves(fieldIndex, player, isQueen));
+      avaidableMoves.push(...getTheBeatingMoves(fieldIndex, player, isQueen));
     }
   } else if (clickedPawn.classList.contains(PLAYERS.BLACK)) {
     player = PLAYERS.BLACK;
     const isQueen = clickedPawn.classList.contains("queen");
     if (isQueen) {
-      avaidableMoves.push(...getNormalMoves(clickedPawn, player, isQueen));
-      avaidableMoves.push(...getTheBeatingMoves(clickedPawn, player, isQueen));
+      avaidableMoves.push(...getNormalMoves(fieldIndex, player, isQueen));
+      avaidableMoves.push(...getTheBeatingMoves(fieldIndex, player, isQueen));
     } else {
-      avaidableMoves.push(...getNormalMoves(clickedPawn, player, isQueen));
-      avaidableMoves.push(...getTheBeatingMoves(clickedPawn, player, isQueen));
+      avaidableMoves.push(...getNormalMoves(fieldIndex, player, isQueen));
+      avaidableMoves.push(...getTheBeatingMoves(fieldIndex, player, isQueen));
     }
   }
   attachMoves(avaidableMoves, player);
 }
-// TODO 1a
-function getNormalMoves(clickedPawn, player, isQueen) {
-  return [];
+
+function getNormalMoves(fieldIndex, player, isQueen) {
+  // convert it to x, y coordinates
+  const boardRows = +getComputedStyle(document.body).getPropertyValue("--rows");
+  const boardColumns = +getComputedStyle(document.body).getPropertyValue(
+    "--columns"
+  );
+  const toCartesianCoordinates = (index) => ({
+    x: index % boardColumns,
+    y: Math.floor(index / boardColumns),
+  });
+  const { x, y } = toCartesianCoordinates(fieldIndex);
+  const shifts = getShifts(player, isQueen);
+
+  // create holder pawns with x and y properties
+  let holderPawnsPos = shifts.map(({ dx, dy }) => ({ x: x + dx, y: y - dy }));
+
+  // filter positions outsite the board
+  const isInsideBoard = ({ x, y }) =>
+    x >= 0 && x < boardColumns && y >= 0 && y < boardColumns;
+  holderPawnsPos = holderPawnsPos.filter(isInsideBoard);
+
+  // convert positions array to fields indexes.
+  const toFieldIndex = ({ x, y }) => y * boardColumns + x;
+  let fieldIndexes = holderPawnsPos.map(toFieldIndex);
+
+  // filter occupy fields
+  const fields = document.querySelectorAll(".chessboard .field");
+  fieldIndexes = fieldIndexes.filter(
+    (index) => !fields[index].children[0]?.classList.contains("cylinder")
+  );
+
+  // return allowed positions
+  let res = [];
+  fieldIndexes.forEach((index) => {
+    res.push({ fieldIndex: index, isQueen });
+  });
+
+  return res;
 }
+
+function getShifts(player, isQueen) {
+  const whitePawnShifts = [
+    { dx: -1, dy: 1 },
+    { dx: 1, dy: 1 },
+  ];
+  const blackPawnShifts = [
+    { dx: -1, dy: -1 },
+    { dx: 1, dy: -1 },
+  ];
+  if (player === PLAYERS.WHITE && !isQueen) return whitePawnShifts;
+  if (player === PLAYERS.BLACK && !isQueen) return blackPawnShifts;
+
+  return whitePawnShifts.concat(blackPawnShifts);
+}
+
 // TODO 1b
-function getTheBeatingMoves(clickedPawn, player, isQueen) {
+function getTheBeatingMoves(fieldIndex, player, isQueen) {
   return [];
 }
 function attachMoves(avaidableMoves, player) {
