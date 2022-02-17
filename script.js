@@ -15,6 +15,28 @@ const PLAYERS = {
 
 let turn = PLAYERS.WHITE;
 
+/** toolkit functions */
+
+function isFirstRow(fieldIndex) {
+  const chessboardColumns = getComputedStyle(document.body).getPropertyValue(
+    "--columns"
+  );
+
+  return fieldIndex < chessboardColumns;
+}
+function isLastRow(fieldIndex) {
+  const chessboardRows = getComputedStyle(document.body).getPropertyValue(
+    "--rows"
+  );
+  const chessboardColumns = getComputedStyle(document.body).getPropertyValue(
+    "--columns"
+  );
+
+  return fieldIndex >= chessboardColumns * (chessboardRows - 1);
+}
+
+/** initialize */
+
 setup();
 
 function setup() {
@@ -152,6 +174,14 @@ function getNormalMoves(fieldIndex, player, isQueen) {
     (index) => !fields[index].children[0]?.classList.contains("cylinder")
   );
 
+  // promote pawn if next position is in promote line
+  const isPromote = (index) =>
+    (isFirstRow(index) && player === PLAYERS.WHITE) ||
+    (isLastRow(index) && player === PLAYERS.BLACK);
+  if (isPromote) {
+    isQueen = true;
+  }
+
   // return allowed positions
   let res = [];
   fieldIndexes.forEach((index) => {
@@ -196,9 +226,22 @@ function attachMove({ isQueen, fieldIndex }, player) {
 // TODO 2:
 function handleHolderPawnClicked(clickedCanMovePawn, selectedPawn) {
   // check if it is a beat (if between clicked field and selected pawn contain enemy pawn then it is beat)
+  // TODO
+
   // remove selected pawn
+  clickedCanMovePawn.classList.remove("canMove");
+
   // remove class .canmove for clicked pawn
+  console.log(selectedPawn);
+  // TODO
+
+  removeAllHolderPawns();
+  removeAllPawnSelected();
+
+  turn = turn === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE;
+
   // check if promote pawn
+  // TODO
 }
 
 // ------------------------
