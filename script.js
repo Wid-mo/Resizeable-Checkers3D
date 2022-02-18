@@ -68,7 +68,7 @@ function attachListeners() {
 
 function handleClick() {
   const clickedPawn = this.children[0];
-  const selectedPawn = document.querySelector(".field .fieldSelected");
+  const selectedField = document.querySelector(".chessboard .fieldSelected");
   const isCurrentPlayerPawnClicked = clickedPawn?.classList.contains(turn);
   const isPossibleMoveFieldClicked = clickedPawn?.classList.contains("canMove");
   // if (clicked on current player pawn) OR (clicked on canMove field) then execute rest of the function
@@ -77,7 +77,7 @@ function handleClick() {
   if (isCurrentPlayerPawnClicked && !isPossibleMoveFieldClicked) {
     handleCurrentPlayerPawnClick(this);
   } else if (isPossibleMoveFieldClicked) {
-    handleHolderPawnClicked(clickedPawn, selectedPawn);
+    handleHolderPawnClicked(clickedPawn, selectedField);
   }
 }
 
@@ -224,24 +224,20 @@ function attachMove({ isQueen, fieldIndex }, player) {
 }
 
 // TODO 2:
-function handleHolderPawnClicked(clickedCanMovePawn, selectedPawn) {
+function handleHolderPawnClicked(clickedCanMovePawn, selectedField) {
   // check if it is a beat (if between clicked field and selected pawn contain enemy pawn then it is beat)
   // TODO
 
   // remove selected pawn
-  clickedCanMovePawn.classList.remove("canMove");
+  selectedField.innerHTML = "";
 
   // remove class .canmove for clicked pawn
-  console.log(selectedPawn);
-  // TODO
+  clickedCanMovePawn.classList.remove("canMove");
 
   removeAllHolderPawns();
   removeAllPawnSelected();
 
   turn = turn === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE;
-
-  // check if promote pawn
-  // TODO
 }
 
 // ------------------------
