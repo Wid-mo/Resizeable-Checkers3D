@@ -178,7 +178,7 @@ function getNormalMoves(fieldIndex, player, isQueen) {
   const isPromote = (index) =>
     (isFirstRow(index) && player === PLAYERS.WHITE) ||
     (isLastRow(index) && player === PLAYERS.BLACK);
-  if (isPromote) {
+  if (fieldIndexes.some(isPromote)) {
     isQueen = true;
   }
 
