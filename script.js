@@ -3,6 +3,8 @@
 // 2) I win when opponent don't have any move
 // 3) When I have double beating, I show only one beat and after beat - automatically select my pawn and appear additional button to "end turn"
 
+// TODO: remove bug when I clicked on pawn & queen || queen && Pawn
+
 const chessboardEl = document.getElementsByClassName("chessboard")[0];
 const rowsNumber = document.getElementById("noOfRows");
 const colsNumber = document.getElementById("noOfColumns");
@@ -115,31 +117,15 @@ function addSelection(fieldClicked) {
 function addAllPossibleMoves(fieldClicked) {
   const fields = document.querySelectorAll(".chessboard .field");
   const fieldIndex = [...fields].findIndex((field) => field === fieldClicked);
-
   const clickedPawn = fieldClicked.children[0];
-  let player;
-  let avaidableMoves = [];
-  if (clickedPawn.classList.contains(PLAYERS.WHITE)) {
-    player = PLAYERS.WHITE;
-    const isQueen = clickedPawn.classList.contains("queen");
-    if (isQueen) {
-      avaidableMoves.push(...getNormalMoves(fieldIndex, player, isQueen));
-      avaidableMoves.push(...getTheBeatingMoves(fieldIndex, player, isQueen));
-    } else {
-      avaidableMoves.push(...getNormalMoves(fieldIndex, player, isQueen));
-      avaidableMoves.push(...getTheBeatingMoves(fieldIndex, player, isQueen));
-    }
-  } else if (clickedPawn.classList.contains(PLAYERS.BLACK)) {
-    player = PLAYERS.BLACK;
-    const isQueen = clickedPawn.classList.contains("queen");
-    if (isQueen) {
-      avaidableMoves.push(...getNormalMoves(fieldIndex, player, isQueen));
-      avaidableMoves.push(...getTheBeatingMoves(fieldIndex, player, isQueen));
-    } else {
-      avaidableMoves.push(...getNormalMoves(fieldIndex, player, isQueen));
-      avaidableMoves.push(...getTheBeatingMoves(fieldIndex, player, isQueen));
-    }
-  }
+  const player = clickedPawn.classList.contains(PLAYERS.WHITE)
+    ? PLAYERS.WHITE
+    : PLAYERS.BLACK;
+  const isQueen = clickedPawn.classList.contains("queen");
+  const avaidableMoves = [
+      ...getNormalMoves(fieldIndex, player, isQueen),
+      ...getTheBeatingMoves(fieldIndex, player, isQueen),
+    ];
   attachMoves(avaidableMoves, player);
 }
 
@@ -208,7 +194,16 @@ function getShifts(player, isQueen) {
 
 // TODO 1b
 function getTheBeatingMoves(fieldIndex, player, isQueen) {
-  return [];
+  let res = [];
+
+  // ??? JAK PRZECHOWAĆ INFORMACJE O BICIACH?
+
+  // res contains isBeat, beatedPawnIndex
+
+  // if after beat pawn is promoted then change isQueen to true
+  // TODO
+
+  return res;
 }
 function attachMoves(avaidableMoves, player) {
   avaidableMoves.forEach((move) => attachMove(move, player));
@@ -224,20 +219,51 @@ function attachMove({ isQueen, fieldIndex }, player) {
 }
 
 // TODO 2:
-function handleHolderPawnClicked(clickedCanMovePawn, selectedField) {
-  // check if it is a beat (if between clicked field and selected pawn contain enemy pawn then it is beat)
+function handleHolderPawnClicked(clickedCanMoveCylinder, selectedField) {
+  // check if it is a beat (if between clicked field and selected pawn contain enemy pawn) then remove beated pawn
   // TODO
+
+
+  // const p1 = toCartesianCoordinates(clickedCanMoveCylinder);
+  // const p2 = toCartesianCoordinates(selectedField);
+
+  // const rowsDifference = Math.abs(p1.y - p2.y);
+  // const isBeat = rowsDifference > 1;
+  // if (isBeat) {
+  //   const fields = document.querySelectorAll(".chessboard .field");
+  //   const boardColumns = +getComputedStyle(document.body).getPropertyValue(
+  //     "--columns"
+  //   );
+  //   const toFieldIndex = ({ x, y }) => y * boardColumns + x;
+  //   const beatedPawnCartesian = { x: (p1.x + p2.x) / 2, y: (p1.x + p2.x) / 2 };
+  //   beatedPawnIndex = toFieldIndex(beatedPawnCartesian);
+  //   fields[beatedPawnIndex].innerHTML = "";
+  // }
 
   // remove selected pawn
   selectedField.innerHTML = "";
 
   // remove class .canmove for clicked pawn
-  clickedCanMovePawn.classList.remove("canMove");
+  clickedCanMoveCylinder.classList.remove("canMove");
 
   removeAllHolderPawns();
   removeAllPawnSelected();
 
   turn = turn === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE;
+}
+
+function toCartesianCoordinates(field) {
+  const fields = document.querySelectorAll(".chessboard .field");
+  const fieldIndex = Object.values(fields).findIndex(
+    (fieldEl) => fieldEl === field
+  );
+  const boardColumns = +getComputedStyle(document.body).getPropertyValue(
+    "--columns"
+  );
+  return {
+    x: fieldIndex % boardColumns,
+    y: Math.floor(fieldIndex / boardColumns),
+  };
 }
 
 // ------------------------
