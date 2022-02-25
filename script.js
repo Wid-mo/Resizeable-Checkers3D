@@ -79,7 +79,7 @@ function handleClick() {
   if (isCurrentPlayerPawnClicked && !isPossibleMoveFieldClicked) {
     handleCurrentPlayerPawnClick(this);
   } else if (isPossibleMoveFieldClicked) {
-    handleHolderPawnClicked(clickedPawn, selectedField);
+    handleHolderPawnClicked(this, selectedField);
   }
 }
 
@@ -218,33 +218,28 @@ function attachMove({ isQueen, fieldIndex }, player) {
   fields[fieldIndex]?.append(pawn);
 }
 
-// TODO 2:
-function handleHolderPawnClicked(clickedCanMoveCylinder, selectedField) {
+function handleHolderPawnClicked(clickedCanMoveField, selectedField) {
   // check if it is a beat (if between clicked field and selected pawn contain enemy pawn) then remove beated pawn
-  // TODO
-
-
-  // const p1 = toCartesianCoordinates(clickedCanMoveCylinder);
-  // const p2 = toCartesianCoordinates(selectedField);
-
-  // const rowsDifference = Math.abs(p1.y - p2.y);
-  // const isBeat = rowsDifference > 1;
-  // if (isBeat) {
-  //   const fields = document.querySelectorAll(".chessboard .field");
-  //   const boardColumns = +getComputedStyle(document.body).getPropertyValue(
-  //     "--columns"
-  //   );
-  //   const toFieldIndex = ({ x, y }) => y * boardColumns + x;
-  //   const beatedPawnCartesian = { x: (p1.x + p2.x) / 2, y: (p1.x + p2.x) / 2 };
-  //   beatedPawnIndex = toFieldIndex(beatedPawnCartesian);
-  //   fields[beatedPawnIndex].innerHTML = "";
-  // }
+  const field1 = toCartesianCoordinates(clickedCanMoveField);
+  const field2 = toCartesianCoordinates(selectedField);
+  const rowsDifference = Math.abs(field1.y - field2.y);
+  const isBeat = rowsDifference > 1;
+  if (isBeat) {
+    const fields = document.querySelectorAll(".chessboard .field");
+    const boardColumns = +getComputedStyle(document.body).getPropertyValue(
+      "--columns"
+    );
+    const toFieldIndex = ({ x, y }) => y * boardColumns + x;
+    const beatedPawnCartesian = { x: (field1.x + field2.x) / 2, y: (field1.y + field2.y) / 2 };
+    const beatedPawnIndex = toFieldIndex(beatedPawnCartesian);
+    fields[beatedPawnIndex].innerHTML = "";
+  }
 
   // remove selected pawn
   selectedField.innerHTML = "";
 
   // remove class .canmove for clicked pawn
-  clickedCanMoveCylinder.classList.remove("canMove");
+  clickedCanMoveField.children[0].classList.remove("canMove");
 
   removeAllHolderPawns();
   removeAllPawnSelected();
