@@ -155,25 +155,17 @@ function getNormalMoves(fieldIndex, player, isQueen) {
 
   // filter occupy fields
   const fields = document.querySelectorAll(".chessboard .field");
-  fieldIndexes = fieldIndexes.filter(
-    (index) => !fields[index].children[0]?.classList.contains("cylinder")
-  );
+  const containsCyllinderClass = (index) =>
+    !fields[index].children[0]?.classList.contains("cylinder");
+  fieldIndexes = fieldIndexes.filter(containsCyllinderClass);
 
   // promote pawn if next position is in promote line
-  const isPromote = (index) =>
-    (isFirstRow(index) && player === PLAYERS.WHITE) ||
-    (isLastRow(index) && player === PLAYERS.BLACK);
-  if (fieldIndexes.some(isPromote)) {
-    isQueen = true;
-  }
+  const isOnPromoteLine = (player) => (fieldIndex) =>
+    isOnPromotedLine(fieldIndex, player);
+  const pawnIsPromoted = fieldIndexes.some(isOnPromoteLine(player));
+  isQueen = pawnIsPromoted ? true : isQueen;
 
-  // return allowed positions
-  let res = [];
-  fieldIndexes.forEach((index) => {
-    res.push({ fieldIndex: index, isQueen });
-  });
-
-  return res;
+  return fieldIndexes.map((fieldIndex) => ({ fieldIndex, isQueen }));
 }
 
 function getShifts(player, isQueen) {
@@ -191,13 +183,16 @@ function getShifts(player, isQueen) {
   return whitePawnShifts.concat(blackPawnShifts);
 }
 
+function isOnPromotedLine(fieldIndex, player) {
+  return (
+    (isFirstRow(fieldIndex) && player === PLAYERS.WHITE) ||
+    (isLastRow(fieldIndex) && player === PLAYERS.BLACK)
+  );
+}
+
 // TODO 1b
 function getTheBeatingMoves(fieldIndex, player, isQueen) {
   let res = [];
-
-  // ??? JAK PRZECHOWAĆ INFORMACJE O BICIACH?
-
-  // res contains isBeat, beatedPawnIndex
 
   // if after beat pawn is promoted then change isQueen to true
   // TODO
