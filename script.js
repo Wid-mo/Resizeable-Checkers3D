@@ -3,8 +3,6 @@
 // 2) I win when opponent don't have any move
 // 3) When I have double beating, I show only one beat and after beat - automatically select my pawn and appear additional button to "end turn"
 
-// TODO: remove bug when I clicked on pawn & queen || queen && Pawn
-
 const chessboardEl = document.getElementsByClassName("chessboard")[0];
 const rowsNumber = document.getElementById("noOfRows");
 const colsNumber = document.getElementById("noOfColumns");
@@ -89,6 +87,7 @@ function handleCurrentPlayerPawnClick(fieldClicked) {
     removeAllHolderPawns();
     removeSelection(fieldClicked);
   } else {
+    removeAllHolderPawns();
     removeAllPawnSelected();
     addSelection(fieldClicked);
     addAllPossibleMoves(fieldClicked);
@@ -123,9 +122,9 @@ function addAllPossibleMoves(fieldClicked) {
     : PLAYERS.BLACK;
   const isQueen = clickedPawn.classList.contains("queen");
   const avaidableMoves = [
-      ...getNormalMoves(fieldIndex, player, isQueen),
-      ...getTheBeatingMoves(fieldIndex, player, isQueen),
-    ];
+    ...getNormalMoves(fieldIndex, player, isQueen),
+    ...getTheBeatingMoves(fieldIndex, player, isQueen),
+  ];
   attachMoves(avaidableMoves, player);
 }
 
@@ -230,7 +229,10 @@ function handleHolderPawnClicked(clickedCanMoveField, selectedField) {
       "--columns"
     );
     const toFieldIndex = ({ x, y }) => y * boardColumns + x;
-    const beatedPawnCartesian = { x: (field1.x + field2.x) / 2, y: (field1.y + field2.y) / 2 };
+    const beatedPawnCartesian = {
+      x: (field1.x + field2.x) / 2,
+      y: (field1.y + field2.y) / 2,
+    };
     const beatedPawnIndex = toFieldIndex(beatedPawnCartesian);
     fields[beatedPawnIndex].innerHTML = "";
   }
