@@ -81,26 +81,25 @@ function handleClick() {
   }
 }
 
-function handleCurrentPlayerPawnClick(fieldClicked) {
-  const isSelectPawnClicked = fieldClicked.classList.contains("fieldSelected");
-  if (isSelectPawnClicked) {
-    removeAllHolderPawns();
-    removeSelection(fieldClicked);
-  } else {
-    removeAllHolderPawns();
-    removeAllPawnSelected();
-    addSelection(fieldClicked);
-    addAllPossibleMoves(fieldClicked);
+function handleCurrentPlayerPawnClick(currentPlayerFieldClicked) {
+  const isSelectPawnClicked =
+    currentPlayerFieldClicked.classList.contains("fieldSelected");
+  deselectAll();
+
+  if (!isSelectPawnClicked) {
+    addSelection(currentPlayerFieldClicked);
+    addAllPossibleMoves(currentPlayerFieldClicked);
   }
+}
+
+function deselectAll() {
+  removeAllHolderPawns();
+  removeAllPawnSelected();
 }
 
 function removeAllHolderPawns() {
   const canMoveElements = document.querySelectorAll(".canMove");
   canMoveElements.forEach((el) => el.remove());
-}
-
-function removeSelection(fieldClicked) {
-  fieldClicked.classList.remove("fieldSelected");
 }
 
 function removeAllPawnSelected() {
@@ -113,19 +112,28 @@ function addSelection(fieldClicked) {
   fieldClicked.classList.add("fieldSelected");
 }
 
-function addAllPossibleMoves(fieldClicked) {
+function addAllPossibleMoves(currentPlayerFieldClicked) {
   const fields = document.querySelectorAll(".chessboard .field");
-  const fieldIndex = [...fields].findIndex((field) => field === fieldClicked);
-  const clickedPawn = fieldClicked.children[0];
-  const player = clickedPawn.classList.contains(PLAYERS.WHITE)
-    ? PLAYERS.WHITE
-    : PLAYERS.BLACK;
+  const fieldIndex = Array.from(fields).findIndex(
+    (field) => field === currentPlayerFieldClicked
+  );
+  const clickedPawn = currentPlayerFieldClicked.children[0];
+  
   const isQueen = clickedPawn.classList.contains("queen");
+
+  const selectedPawn = {
+    x: 1,
+    y: 1,
+    color: turn,
+    isQueen: isQueen
+  }
+  // avaidableMoves contain array of objects TODO
   const avaidableMoves = [
-    ...getNormalMoves(fieldIndex, player, isQueen),
-    ...getTheBeatingMoves(fieldIndex, player, isQueen),
+    ...getNormalMoves(fieldIndex, turn, isQueen),
+    ...getTheBeatingMoves(fieldIndex, turn, isQueen),
   ];
-  attachMoves(avaidableMoves, player);
+  // attach moves pass avaidable moves only TODO
+  attachMoves(avaidableMoves, turn);
 }
 
 function getNormalMoves(fieldIndex, player, isQueen) {
@@ -140,6 +148,8 @@ function getNormalMoves(fieldIndex, player, isQueen) {
   });
   const { x, y } = toCartesianCoordinates(fieldIndex);
   const shifts = getShifts(player, isQueen);
+
+  // const add = (vector) =>
 
   // create holder pawns with x and y properties
   let holderPawnsPos = shifts.map(({ dx, dy }) => ({ x: x + dx, y: y - dy }));
@@ -192,12 +202,44 @@ function isOnPromotedLine(fieldIndex, player) {
 
 // TODO 1b
 function getTheBeatingMoves(fieldIndex, player, isQueen) {
-  let res = [];
+  // // convert it to x, y coordinates
+  // const boardRows = +getComputedStyle(document.body).getPropertyValue("--rows");
+  // const boardColumns = +getComputedStyle(document.body).getPropertyValue(
+  //   "--columns"
+  // );
+  // const toCartesianCoordinates = (index) => ({
+  //   x: index % boardColumns,
+  //   y: Math.floor(index / boardColumns),
+  // });
+  // const { x, y } = toCartesianCoordinates(fieldIndex);
+  // const shifts = getShifts(player, isQueen);
 
-  // if after beat pawn is promoted then change isQueen to true
-  // TODO
+  // // create holder pawns with x and y properties
+  // let holderPawnsPos = shifts.map(({ dx, dy }) => ({ x: x + dx, y: y - dy }));
 
-  return res;
+  // // filter positions outsite the board
+  // const isInsideBoard = ({ x, y }) =>
+  //   x >= 0 && x < boardColumns && y >= 0 && y < boardColumns;
+  // holderPawnsPos = holderPawnsPos.filter(isInsideBoard);
+
+  // // convert positions array to fields indexes.
+  // const toFieldIndex = ({ x, y }) => y * boardColumns + x;
+  // let fieldIndexes = holderPawnsPos.map(toFieldIndex);
+
+  // // filter occupy fields
+  // const fields = document.querySelectorAll(".chessboard .field");
+  // const containsCyllinderClass = (index) =>
+  //   !fields[index].children[0]?.classList.contains("cylinder");
+  // fieldIndexes = fieldIndexes.filter(containsCyllinderClass);
+
+  // // promote pawn if next position is in promote line
+  // const isOnPromoteLine = (player) => (fieldIndex) =>
+  //   isOnPromotedLine(fieldIndex, player);
+  // const pawnIsPromoted = fieldIndexes.some(isOnPromoteLine(player));
+  // isQueen = pawnIsPromoted ? true : isQueen;
+
+  // return fieldIndexes.map((fieldIndex) => ({ fieldIndex, isQueen }));
+  return [];
 }
 function attachMoves(avaidableMoves, player) {
   avaidableMoves.forEach((move) => attachMove(move, player));
