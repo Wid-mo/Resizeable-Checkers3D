@@ -204,43 +204,80 @@ function isOnPromotedLine(fieldIndex, color) {
 }
 
 function getTheBeatingMoves({ x, y, color, isQueen }) {
-  // const boardColumns = +getComputedStyle(document.body).getPropertyValue(
-  //   "--columns"
-  // );
-  // const toFieldIndex = ({ x, y }) => y * boardColumns + x;
-  // const isPosInsideBoard = ({ x, y }) =>
-  //   x >= 0 && x < boardColumns && y >= 0 && y < boardColumns;
+  const boardColumns = +getComputedStyle(document.body).getPropertyValue(
+    "--columns"
+  );
+  const toFieldIndex = ({ x, y }) => y * boardColumns + x;
+  const isPosInsideBoard = ({ x, y }) =>
+    x >= 0 && x < boardColumns && y >= 0 && y < boardColumns;
 
-  // const shifts = getShifts(color, isQueen);
+  const shifts = getShifts(color, isQueen);
+  const twiceShifts = shifts.map(({ dx, dy }) => ({ dx: dx * 2, dy: dy * 2 }));
 
-  // // create holder pawns with x and y properties
-  // let holderPawnsPos = shifts.map(({ dx, dy }) => ({ x: x + dx, y: y - dy }));
+  let enemyCyllindersPos = shifts.map(({ dx, dy }) => ({
+    x: x + dx,
+    y: y - dy,
+  }));
+  let holderPawnsPos = twiceShifts.map(({ dx, dy }) => ({
+    x: x + dx,
+    y: y - dy,
+  }));
 
-  // // filter positions outsite the board
-  // holderPawnsPos = holderPawnsPos.filter(isPosInsideBoard);
+  // filter positions outsite the board
+  enemyCyllindersPos = enemyCyllindersPos.filter(isPosInsideBoard);
+  holderPawnsPos = holderPawnsPos.filter(isPosInsideBoard);
 
-  // // convert positions array to fields indexes.
-  // let fieldIndexes = holderPawnsPos.map(toFieldIndex);
+  // convert positions array to fields indexes.
+  let enemyFieldIndexes = enemyCyllindersPos.map(toFieldIndex);
+  let holderPawnsFieldIndexes = holderPawnsPos.map(toFieldIndex);
 
-  // // filter occupy fields
-  // const fields = document.querySelectorAll(".chessboard .field");
-  // const fieldNotContainCylinder = (fieldIndex) =>
-  //   !fields[fieldIndex].children[0]?.classList.contains("cylinder");
-  // fieldIndexes = fieldIndexes.filter(fieldNotContainCylinder);
+  const fieldIndexes = holderPawnsFieldIndexes.reduce(
+    (fieldIndexesArray, holderPawnFieldIndex, index) => {
+      if (
+        isContainEnemyCylinder(enemyFieldIndexes[index], color) &&
+        isEmptyField(holderPawnFieldIndex)
+      )
+        fieldIndexesArray.push(holderPawnFieldIndex);
 
-  // // promote pawn if next position is in promote line
-  // const isOnPromoteLine = (color) => (fieldIndex) =>
-  //   isOnPromotedLine(fieldIndex, color);
-  // const pawnIsPromoted = fieldIndexes.some(isOnPromoteLine(color));
-  // isQueen = pawnIsPromoted ? true : isQueen;
+      return fieldIndexesArray;
+    },
+    []
+  );
 
-  // return fieldIndexes.map((fieldIndex) => ({
-  //   fieldIndex,
-  //   color,
-  //   isQueen,
-  // }));
-  return [];
+  // promote pawn if next position is in promote line
+  const isOnPromoteLine = (color) => (fieldIndex) =>
+    isOnPromotedLine(fieldIndex, color);
+  const pawnIsPromoted = fieldIndexes.some(isOnPromoteLine(color));
+  isQueen = pawnIsPromoted ? true : isQueen;
+
+  return fieldIndexes.map((fieldIndex) => ({
+    fieldIndex,
+    color,
+    isQueen,
+  }));
 }
+
+function isContainEnemyCylinder(index, color) {
+  const enemyPlayerColor =
+    color === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE;
+
+  // console.log(index); // TODO
+  const field = document.querySelector(
+    `body > div.chessboard > div:nth-child(${index + 1})`
+  );
+  const pawnEl = field?.children[0];
+  const containCylinder = pawnEl?.classList?.contains("cylinder");
+  const isEnemyColorCylinder = pawnEl?.classList?.contains(enemyPlayerColor);
+
+  return containCylinder && isEnemyColorCylinder;
+}
+
+function isEmptyField(index) {
+  return !document.querySelector(
+    `body > div.chessboard > div:nth-child(${index + 1})`
+  )?.children[0];
+}
+
 function attachHoverCylinders(hoverCylinders) {
   hoverCylinders.forEach((cylinder) => attachMove(cylinder));
 }
@@ -287,7 +324,7 @@ function handleHolderPawnClicked(clickedCanMoveField, selectedField) {
 }
 
 function toCartesianCoordinates(field) {
-  const fields = document.querySelectorAll(".chessboard .field");
+  const fields = document.querySelectorAll("body > div.chessboard > div.field");
   const fieldIndex = Object.values(fields).findIndex(
     (fieldEl) => fieldEl === field
   );
