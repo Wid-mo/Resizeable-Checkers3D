@@ -154,19 +154,16 @@ function getNormalMoves({ x, y, color, isQueen }) {
   const shifts = getShifts(color, isQueen);
 
   // create holder pawns with x and y properties
-  let holderPawnsPos = shifts.map(({ dx, dy }) => ({ x: x + dx, y: y - dy }));
+  const holderPawnsPos = shifts.map(({ dx, dy }) => ({ x: x + dx, y: y - dy }));
 
   // filter positions outsite the board
-  holderPawnsPos = holderPawnsPos.filter(isPosInsideBoard);
+  const holderPawnsPosInsideBoard = holderPawnsPos.filter(isPosInsideBoard);
 
   // convert positions array to fields indexes.
-  let fieldIndexes = holderPawnsPos.map(toFieldIndex);
+  const fieldIndexesPos = holderPawnsPosInsideBoard.map(toFieldIndex);
 
   // filter occupy fields
-  const fields = document.querySelectorAll(".chessboard .field");
-  const fieldNotContainCylinder = (fieldIndex) =>
-    !fields[fieldIndex]?.children[0]?.classList.contains("cylinder");
-  fieldIndexes = fieldIndexes.filter(fieldNotContainCylinder);
+  const fieldIndexes = fieldIndexesPos.filter(isEmptyField);
 
   // promote pawn if next position is in promote line
   const isOnPromoteLine = (color) => (fieldIndex) =>
@@ -219,34 +216,27 @@ function getTheBeatingMoves({ x, y, color, isQueen }) {
   const shifts = getShifts(color, isQueen);
   const twiceShifts = shifts.map(({ dx, dy }) => ({ dx: dx * 2, dy: dy * 2 }));
 
-  let enemyCyllindersPos = shifts.map(({ dx, dy }) => ({
+  const enemyCyllindersPos = shifts.map(({ dx, dy }) => ({
     x: x + dx,
     y: y - dy,
   }));
-  let holderPawnsPos = twiceShifts.map(({ dx, dy }) => ({
+  const holderPawnsPos = twiceShifts.map(({ dx, dy }) => ({
     x: x + dx,
     y: y - dy,
   }));
 
   // convert positions array to fields indexes.
-  let enemyFieldIndexes = enemyCyllindersPos.map(toFieldIndex);
-  let holderPawnsFieldIndexes = holderPawnsPos.map(toFieldIndex);
+  const enemyFieldIndexes = enemyCyllindersPos.map(toFieldIndex);
+  const holderPawnsFieldIndexes = holderPawnsPos.map(toFieldIndex);
 
-  const fieldIndexesBeforeFilter = holderPawnsFieldIndexes.reduce(
-    (fieldIndexesArray, holderPawnFieldIndex, index) => {
-      if (
-        isContainEnemyCylinder(enemyFieldIndexes[index], color) &&
-        isEmptyField(holderPawnFieldIndex)
-      )
-        fieldIndexesArray.push(holderPawnFieldIndex);
-
-      return fieldIndexesArray;
-    },
-    []
+  const fieldIndexesBeforeFilter = holderPawnsFieldIndexes.filter(
+    (holderPawnFieldIndex, index) =>
+      isContainEnemyCylinder(enemyFieldIndexes[index], color) &&
+      isEmptyField(holderPawnFieldIndex)
   );
 
   const fieldIndexesPosBeforeFilter = fieldIndexesBeforeFilter.map(
-    (fieldIndex) => toCartesianCoordinates(fieldIndex)
+    toCartesianCoordinates
   );
   const fieldIndexesPos = fieldIndexesPosBeforeFilter.filter(isPosInsideBoard);
   const fieldIndexes = fieldIndexesPos.map(toFieldIndex);
