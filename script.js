@@ -165,7 +165,7 @@ function getNormalMoves({ x, y, color, isQueen }) {
   // filter occupy fields
   const fields = document.querySelectorAll(".chessboard .field");
   const fieldNotContainCylinder = (fieldIndex) =>
-    !fields[fieldIndex].children[0]?.classList.contains("cylinder");
+    !fields[fieldIndex]?.children[0]?.classList.contains("cylinder");
   fieldIndexes = fieldIndexes.filter(fieldNotContainCylinder);
 
   // promote pawn if next position is in promote line
@@ -208,6 +208,11 @@ function getTheBeatingMoves({ x, y, color, isQueen }) {
     "--columns"
   );
   const toFieldIndex = ({ x, y }) => y * boardColumns + x;
+  const toCartesianCoordinates = (fieldIndex) => ({
+    x: fieldIndex % boardColumns,
+    y: Math.floor(fieldIndex / boardColumns),
+  });
+
   const isPosInsideBoard = ({ x, y }) =>
     x >= 0 && x < boardColumns && y >= 0 && y < boardColumns;
 
@@ -223,15 +228,11 @@ function getTheBeatingMoves({ x, y, color, isQueen }) {
     y: y - dy,
   }));
 
-  // filter positions outsite the board
-  enemyCyllindersPos = enemyCyllindersPos.filter(isPosInsideBoard);
-  holderPawnsPos = holderPawnsPos.filter(isPosInsideBoard);
-
   // convert positions array to fields indexes.
   let enemyFieldIndexes = enemyCyllindersPos.map(toFieldIndex);
   let holderPawnsFieldIndexes = holderPawnsPos.map(toFieldIndex);
 
-  const fieldIndexes = holderPawnsFieldIndexes.reduce(
+  const fieldIndexesBeforeFilter = holderPawnsFieldIndexes.reduce(
     (fieldIndexesArray, holderPawnFieldIndex, index) => {
       if (
         isContainEnemyCylinder(enemyFieldIndexes[index], color) &&
@@ -243,6 +244,12 @@ function getTheBeatingMoves({ x, y, color, isQueen }) {
     },
     []
   );
+
+  const fieldIndexesPosBeforeFilter = fieldIndexesBeforeFilter.map(
+    (fieldIndex) => toCartesianCoordinates(fieldIndex)
+  );
+  const fieldIndexesPos = fieldIndexesPosBeforeFilter.filter(isPosInsideBoard);
+  const fieldIndexes = fieldIndexesPos.map(toFieldIndex);
 
   // promote pawn if next position is in promote line
   const isOnPromoteLine = (color) => (fieldIndex) =>
@@ -261,7 +268,6 @@ function isContainEnemyCylinder(index, color) {
   const enemyPlayerColor =
     color === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE;
 
-  // console.log(index); // TODO
   const field = document.querySelector(
     `body > div.chessboard > div:nth-child(${index + 1})`
   );
@@ -293,8 +299,8 @@ function attachMove({ fieldIndex, color, isQueen }) {
 
 function handleHolderPawnClicked(clickedCanMoveField, selectedField) {
   // check if it is a beat (if between clicked field and selected pawn contain enemy pawn) then remove beated pawn
-  const field1 = toCartesianCoordinates(clickedCanMoveField);
-  const field2 = toCartesianCoordinates(selectedField);
+  const field1 = fromFieldElementToCartesianCoordinates(clickedCanMoveField);
+  const field2 = fromFieldElementToCartesianCoordinates(selectedField);
   const rowsDifference = Math.abs(field1.y - field2.y);
   const isBeat = rowsDifference > 1;
   if (isBeat) {
@@ -323,10 +329,10 @@ function handleHolderPawnClicked(clickedCanMoveField, selectedField) {
   turn = turn === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE;
 }
 
-function toCartesianCoordinates(field) {
+function fromFieldElementToCartesianCoordinates(fieldEl) {
   const fields = document.querySelectorAll("body > div.chessboard > div.field");
   const fieldIndex = Object.values(fields).findIndex(
-    (fieldEl) => fieldEl === field
+    (fieldElement) => fieldElement === fieldEl
   );
   const boardColumns = +getComputedStyle(document.body).getPropertyValue(
     "--columns"
