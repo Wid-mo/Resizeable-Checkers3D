@@ -148,9 +148,12 @@ function getNormalMoves({ x, y, color, isQueen }) {
   const boardColumns = +getComputedStyle(document.body).getPropertyValue(
     "--columns"
   );
+  const boardRows = +getComputedStyle(document.body).getPropertyValue(
+    "--rows"
+  );
   const toFieldIndex = ({ x, y }) => y * boardColumns + x;
   const isPosInsideBoard = ({ x, y }) =>
-    x >= 0 && x < boardColumns && y >= 0 && y < boardColumns;
+    x >= 0 && x < boardColumns && y >= 0 && y < boardRows;
 
   const shifts = getShifts(color, isQueen);
 
@@ -165,7 +168,6 @@ function getNormalMoves({ x, y, color, isQueen }) {
 
   // filter occupy fields
   const fieldIndexes = fieldIndexesPos.filter(isEmptyField);
-
   // promote pawn if next position is in promote line
   const isOnPromoteLine = (color) => (fieldIndex) =>
     isOnPromotedLine(fieldIndex, color);
@@ -205,6 +207,9 @@ function getTheBeatingMoves({ x, y, color, isQueen }) {
   const boardColumns = +getComputedStyle(document.body).getPropertyValue(
     "--columns"
   );
+  const boardRows = +getComputedStyle(document.body).getPropertyValue(
+    "--rows"
+  );
   const toFieldIndex = ({ x, y }) => y * boardColumns + x;
   const toCartesianCoordinates = (fieldIndex) => ({
     x: fieldIndex % boardColumns,
@@ -212,7 +217,7 @@ function getTheBeatingMoves({ x, y, color, isQueen }) {
   });
 
   const isPosInsideBoard = ({ x, y }) =>
-    x >= 0 && x < boardColumns && y >= 0 && y < boardColumns;
+    x >= 0 && x < boardColumns && y >= 0 && y < boardRows;
 
   const shifts = getShifts(color, isQueen);
   const twiceShifts = shifts.map(({ dx, dy }) => ({ dx: dx * 2, dy: dy * 2 }));
