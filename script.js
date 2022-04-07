@@ -72,11 +72,10 @@ function handleClick() {
   const isCurrentPlayerPawnClicked = clickedPawn?.classList.contains(turn);
   const isPossibleMoveFieldClicked = clickedPawn?.classList.contains("canMove");
   // if (clicked on current player pawn) OR (clicked on canMove field) then execute rest of the function
-  if (!isCurrentPlayerPawnClicked && !isPossibleMoveFieldClicked){
-    deselectAll()
-    return
-  } 
-
+  if (!isCurrentPlayerPawnClicked && !isPossibleMoveFieldClicked) {
+    // deselectAll()
+    return;
+  }
   if (isCurrentPlayerPawnClicked && !isPossibleMoveFieldClicked) {
     handleCurrentPlayerPawnClick(this);
   } else if (isPossibleMoveFieldClicked) {
@@ -115,7 +114,6 @@ function addSelection(fieldClicked) {
   fieldClicked.classList.add("fieldSelected");
 }
 
-// TODO
 function addAllPossibleMoves(currentPlayerFieldClicked) {
   const boardColumns = +getComputedStyle(document.body).getPropertyValue(
     "--columns"
@@ -362,6 +360,9 @@ function changeBoardSize() {
 
   setMaxPawnsNumber(chessboardRows, chessboardColumns);
   changePawnsNumberOnChessboard(pawnsNumber.value);
+
+  attachListeners();
+  turn = PLAYERS.WHITE;
 }
 
 function createFields(chessboardRows = 8, chessboardColumns = 8) {
@@ -434,6 +435,9 @@ function changePawnsNumberOnChessboard(pawnsNumber) {
       }
     }
   }
+
+  attachListeners();
+  turn = PLAYERS.WHITE;
 }
 
 function createPawn(color) {
