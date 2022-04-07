@@ -72,7 +72,10 @@ function handleClick() {
   const isCurrentPlayerPawnClicked = clickedPawn?.classList.contains(turn);
   const isPossibleMoveFieldClicked = clickedPawn?.classList.contains("canMove");
   // if (clicked on current player pawn) OR (clicked on canMove field) then execute rest of the function
-  if (!isCurrentPlayerPawnClicked && !isPossibleMoveFieldClicked) return;
+  if (!isCurrentPlayerPawnClicked && !isPossibleMoveFieldClicked){
+    deselectAll()
+    return
+  } 
 
   if (isCurrentPlayerPawnClicked && !isPossibleMoveFieldClicked) {
     handleCurrentPlayerPawnClick(this);
