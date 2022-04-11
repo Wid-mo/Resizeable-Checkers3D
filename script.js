@@ -73,7 +73,7 @@ function handleClick() {
   const isPossibleMoveFieldClicked = clickedPawn?.classList.contains("canMove");
   // if (clicked on current player pawn) OR (clicked on canMove field) then execute rest of the function
   if (!isCurrentPlayerPawnClicked && !isPossibleMoveFieldClicked) {
-    // deselectAll()
+    deselectAll();
     return;
   }
   if (isCurrentPlayerPawnClicked && !isPossibleMoveFieldClicked) {
@@ -115,7 +115,7 @@ function addSelection(fieldClicked) {
 }
 
 function addAllPossibleMoves(currentPlayerFieldClicked) {
-  const selectedPawn = getPawnInfo(currentPlayerFieldClicked)
+  const selectedPawn = getPawnInfo(currentPlayerFieldClicked);
   const hoverCylinders = [
     ...getNormalMoves(selectedPawn),
     ...getTheBeatingMoves(selectedPawn),
@@ -124,7 +124,7 @@ function addAllPossibleMoves(currentPlayerFieldClicked) {
 }
 
 function getPawnInfo(field) {
-  const cylinderPos = getCartesianCoordinatesFromField(field);
+  const cylinderPos = getCartesianCoordinates(field);
   const clickedPawn = field.children[0];
   const isQueen = clickedPawn.classList.contains("queen");
   return {
@@ -139,7 +139,7 @@ function getPawnInfo(field) {
  * @param {*} field Div contain field
  * @returns {{x: number, y: number}}
  */
-function getCartesianCoordinatesFromField(field) {
+function getCartesianCoordinates(field) {
   const boardColumns = +getComputedStyle(document.body).getPropertyValue(
     "--columns"
   );
@@ -335,17 +335,8 @@ function handleHolderPawnClicked(clickedCanMoveField, selectedField) {
   removeAllHolderPawns();
   removeAllPawnSelected();
 
-  // if it isn't last move
-  const selectedPawn = getPawnInfo(clickedCanMoveField);
-  if (isBeat && getTheBeatingMoves(selectedPawn).length !== 0) {
-    // const btnEndTurn = document.getElementById("endTurn");
-    // btnEndTurn.style.display = "block"; // or inherit
-    // return;
-  }
-
   turn = turn === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE;
 }
-
 
 function fromFieldElementToCartesianCoordinates(fieldEl) {
   const fields = document.querySelectorAll("body > div.chessboard > div.field");
@@ -390,6 +381,7 @@ function changeBoardSize() {
 
   attachListeners();
   turn = PLAYERS.WHITE;
+  deselectAll();
 }
 
 function createFields(chessboardRows = 8, chessboardColumns = 8) {
@@ -465,6 +457,7 @@ function changePawnsNumberOnChessboard(pawnsNumber) {
 
   attachListeners();
   turn = PLAYERS.WHITE;
+  deselectAll();
 }
 
 function createPawn(color) {
