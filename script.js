@@ -115,6 +115,31 @@ function addSelection(fieldClicked) {
 }
 
 function addAllPossibleMoves(currentPlayerFieldClicked) {
+  const selectedPawn = getPawnInfo(currentPlayerFieldClicked)
+  const hoverCylinders = [
+    ...getNormalMoves(selectedPawn),
+    ...getTheBeatingMoves(selectedPawn),
+  ];
+  attachHoverCylinders(hoverCylinders);
+}
+
+function getPawnInfo(field) {
+  const cylinderPos = getCartesianCoordinatesFromField(field);
+  const clickedPawn = field.children[0];
+  const isQueen = clickedPawn.classList.contains("queen");
+  return {
+    ...cylinderPos,
+    color: turn,
+    isQueen,
+  };
+}
+
+/**
+ * Return field Cartesian Coordinates from top left corner starting from 0
+ * @param {*} field Div contain field
+ * @returns {{x: number, y: number}}
+ */
+function getCartesianCoordinatesFromField(field) {
   const boardColumns = +getComputedStyle(document.body).getPropertyValue(
     "--columns"
   );
@@ -126,22 +151,10 @@ function addAllPossibleMoves(currentPlayerFieldClicked) {
   });
 
   const fieldIndex = Array.from(fields).findIndex(
-    (field) => field === currentPlayerFieldClicked
+    (fieldFromFields) => fieldFromFields === field
   );
   const cylinderPos = toCartesianCoordinates(fieldIndex);
-  const clickedPawn = currentPlayerFieldClicked.children[0];
-  const isQueen = clickedPawn.classList.contains("queen");
-  const selectedPawn = {
-    ...cylinderPos,
-    color: turn,
-    isQueen,
-  };
-
-  const hoverCylinders = [
-    ...getNormalMoves(selectedPawn),
-    ...getTheBeatingMoves(selectedPawn),
-  ];
-  attachHoverCylinders(hoverCylinders);
+  return cylinderPos;
 }
 
 function getNormalMoves({ x, y, color, isQueen }) {
@@ -322,8 +335,17 @@ function handleHolderPawnClicked(clickedCanMoveField, selectedField) {
   removeAllHolderPawns();
   removeAllPawnSelected();
 
+  // if it isn't last move
+  const selectedPawn = getPawnInfo(clickedCanMoveField);
+  if (isBeat && getTheBeatingMoves(selectedPawn).length !== 0) {
+    // const btnEndTurn = document.getElementById("endTurn");
+    // btnEndTurn.style.display = "block"; // or inherit
+    // return;
+  }
+
   turn = turn === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE;
 }
+
 
 function fromFieldElementToCartesianCoordinates(fieldEl) {
   const fields = document.querySelectorAll("body > div.chessboard > div.field");
