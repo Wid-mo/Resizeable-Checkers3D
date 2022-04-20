@@ -14,6 +14,7 @@ const PLAYERS = {
 };
 
 let turn = PLAYERS.WHITE;
+let savedPawn;
 
 /** toolkit functions */
 
@@ -115,6 +116,8 @@ function addSelection(fieldClicked) {
 }
 
 function addAllPossibleMoves(currentPlayerFieldClicked) {
+  if (savedPawn && savedPawn !== currentPlayerFieldClicked) return;
+
   const selectedPawn = getPawnInfo(currentPlayerFieldClicked);
   const hoverCylinders = [
     ...getNormalMoves(selectedPawn),
@@ -335,6 +338,21 @@ function handleHolderPawnClicked(clickedCanMoveField, selectedField) {
   removeAllHolderPawns();
   removeAllPawnSelected();
 
+  // if it isn't last possible beating
+  const selectedPawn = getPawnInfo(clickedCanMoveField);
+  if (isBeat && getTheBeatingMoves(selectedPawn).length !== 0) {
+    const btnEndTurn = document.getElementById("endTurn");
+    btnEndTurn.style.visibility = "visible";
+
+    savedPawn = clickedCanMoveField;
+    return;
+  } else {
+    const btnEndTurn = document.getElementById("endTurn");
+    btnEndTurn.style.visibility = "hidden";
+
+    savedPawn = undefined;
+  }
+
   turn = turn === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE;
 }
 
@@ -356,6 +374,12 @@ function fromFieldElementToCartesianCoordinates(fieldEl) {
 rowsNumber.addEventListener("input", changeBoardSize);
 colsNumber.addEventListener("input", changeBoardSize);
 pawnsNumber.addEventListener("input", changePawnsNumber);
+document.getElementById("endTurn").addEventListener("click", () => {
+  const btnEndTurn = document.getElementById("endTurn");
+  btnEndTurn.style.visibility = "hidden";
+  savedPawn = undefined;
+  turn = turn === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE;
+});
 
 function changeBoardSize() {
   let chessboardRows = getComputedStyle(document.body).getPropertyValue(

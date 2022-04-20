@@ -22,6 +22,24 @@ body {
   overflow: hidden;
 }
 
+.endTurn {
+  visibility: hidden;
+  position: absolute;
+  bottom: 5vmin;
+  right: 5vmin;
+
+  background-color: yellow;
+  padding: 1.3em 2.6em;
+  outline: none;
+  border: none;
+  color: black;
+  font-size: 1.3em;
+  letter-spacing: 0.2em;
+  font-weight: bold;
+  box-shadow: 0 0 10px yellow;
+  cursor: pointer;
+}
+
 .chessboard {
   --cell-size: calc(80vmin / max(var(--rows), var(--columns)));
   background: burlywood;
