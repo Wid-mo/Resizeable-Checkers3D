@@ -353,7 +353,17 @@ function handleHolderPawnClicked(clickedCanMoveField, selectedField) {
     savedPawn = undefined;
   }
 
+  if (isWin(turn)) {
+    alert(`${turn.toUpperCase()} win.`);
+  }
+
   turn = turn === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE;
+}
+
+function isWin(turn) {
+  const enemyTurn = turn === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE;
+  const enemyPawns = document.querySelectorAll(`.${enemyTurn}`);
+  return enemyPawns.length === 0;
 }
 
 function fromFieldElementToCartesianCoordinates(fieldEl) {
