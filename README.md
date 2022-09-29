@@ -11,7 +11,9 @@ This project helps you to look at checkers from a different more general perspec
 Can first player always win on 4x4 board? (For 2 pawns setting)
 
 ## How use app
-Download zip file and run index.html
+[CLICK HERE](https://wid-mo.github.io/Resizeable-Checkers3D/)  
+
+or download zip file and run index.html
 
 ## some interesting functions in script.js
 - getNormalMoves
