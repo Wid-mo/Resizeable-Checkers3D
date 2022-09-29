@@ -13,7 +13,7 @@ Can first player always win on 4x4 board? (For 2 pawns setting)
 ## How use app
 [CLICK HERE](https://wid-mo.github.io/Resizeable-Checkers3D/)  
 
-or download zip file and run index.html
+or [download](https://github.com/Wid-mo/Resizeable-Checkers3D/archive/refs/heads/master.zip) zip file and run index.html
 
 ## some interesting functions in script.js
 - getNormalMoves
